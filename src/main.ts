@@ -8,11 +8,20 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Busca de CEP')
     .setDescription(
-      'API para busca de informações de CEP usando múltiplos provedores',
+      'API para busca de informações de CEP usando múltiplos provedores, com autenticação JWT',
     )
     .setVersion('1.0')
-    .addTag('cep')
+    .addTag('CEP')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'access-token',
+    )
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document);
 

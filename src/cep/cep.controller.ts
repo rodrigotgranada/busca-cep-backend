@@ -1,8 +1,16 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { ApiTags, ApiParam, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiParam,
+  ApiOperation,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { CepService } from './cep.service';
+import { CepResponse } from './interfaces/cep-response.interface';
 
-@ApiTags('cep')
+@ApiTags('CEP')
+@ApiBearerAuth('access-token')
 @Controller('cep')
 export class CepController {
   constructor(private readonly cepService: CepService) {}
@@ -15,12 +23,13 @@ export class CepController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Informações do CEP retornadas com sucesso',
+    description: 'Informações do CEP retornadas com sucesso.',
+    type: CepResponse,
   })
-  @ApiResponse({ status: 400, description: 'CEP inválido' })
+  @ApiResponse({ status: 400, description: 'CEP inválido.' })
   @ApiResponse({
-    status: 500,
-    description: 'Erro ao buscar informações do CEP',
+    status: 404,
+    description: 'CEP não encontrado mesmo após correções.',
   })
   @Get(':cep')
   async getCep(@Param('cep') cep: string) {
