@@ -7,11 +7,15 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
+import { Logger } from '../logging/logger.service';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly logger: Logger,
+  ) {}
 
   @ApiOperation({ summary: 'Realiza login e retorna um token JWT' })
   @ApiBody({
@@ -35,10 +39,24 @@ export class AuthController {
     token: string;
   } {
     const { username, password } = body;
+    this.logger.log(
+      `Tentativa de login para o usuário: ${username}`,
+      'AuthController',
+    );
+
     if (!username || !password) {
+      this.logger.warn(
+        'Credenciais ausentes na tentativa de login',
+        'AuthController',
+      );
       throw new UnauthorizedException('Credenciais são obrigatórias');
     }
+
     const token = this.authService.login(username, password);
+    this.logger.log(
+      `Login bem-sucedido para o usuário: ${username}`,
+      'AuthController',
+    );
     return { token };
   }
 
@@ -48,11 +66,13 @@ export class AuthController {
   @Post('logout')
   logout(@Headers('Authorization') authHeader: string): { message: string } {
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      this.logger.warn('Tentativa de logout sem token', 'AuthController');
       throw new UnauthorizedException('Token não fornecido');
     }
 
     const token = authHeader.split(' ')[1];
     this.authService.logout(token);
+    this.logger.log('Logout realizado com sucesso', 'AuthController');
     return { message: 'Logout realizado com sucesso' };
   }
 }

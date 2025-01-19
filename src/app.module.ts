@@ -3,10 +3,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CepModule } from './cep/cep.module';
 import { AuthModule } from './auth/auth.module';
+import { Logger } from './logging/logger.service';
 
 @Module({
-  imports: [AuthModule, CepModule],
+  imports: [CepModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, Logger],
+  exports: [Logger],
 })
 export class AppModule {}
