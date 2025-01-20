@@ -1,99 +1,155 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Busca CEP Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este é um backend desenvolvido em Node.js com o framework NestJS para fornecer informações de CEP usando múltiplos provedores. Ele também possui endpoints para verificar a saúde da aplicação e expor métricas no formato Prometheus.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Tecnologias Utilizadas
 
-## Description
+- **Node.js**: Ambiente de execução JavaScript.
+- **NestJS**: Framework para construção de aplicações backend.
+- **Prometheus**: Para coleta de métricas.
+- **Docker**: Containerização da aplicação.
+- **Jest**: Para testes unitários e E2E.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Requisitos
 
-## Project setup
+- Node.js (v18 ou superior)
+- Docker e Docker Compose (para execução com Docker)
+
+## Configuração do Projeto
+
+1. **Clone o repositório:**
+
+   ```bash
+   git clone https://github.com/rodrigotgranada/busca-cep-backend.git
+   cd busca-cep-backend
+   ```
+
+2. **Instale as dependências:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Inicie a aplicação:**
+
+   ```bash
+   npm run start
+   ```
+
+4. **Acesse a aplicação:**
+
+   - API: `http://localhost:3000`
+   - Documentação Swagger: `http://localhost:3000/api-docs`
+
+## Endpoints
+
+### 1. **Busca de CEP**
+
+- **Endpoint:** `POST /cep/{cep}`
+- **Entrada:**
+  ```json
+  {
+    "cep": "12345678"
+  }
+  ```
+- **Saída esperada:**
+  ```json
+  {
+    "data": {
+      "cep": "12345678",
+      "state": "SP",
+      "city": "São Paulo",
+      "neighborhood": "Centro",
+      "street": "Rua Exemplo",
+      "service": "via-cep"
+    },
+    "status": 1,
+    "message": "CEP encontrado com sucesso."
+  }
+  ```
+
+### 2. **Saúde da Aplicação**
+
+- **Endpoint:** `GET /health`
+- **Saída esperada:**
+  ```json
+  {
+    "status": "ok",
+    "info": {
+      "external-service": {
+        "status": "up"
+      }
+    },
+    "error": {}
+  }
+  ```
+
+### 3. **Métricas**
+
+- **Endpoint:** `GET /metrics`
+- **Saída esperada:** Texto com métricas no formato Prometheus.
+
+## Testes
+
+### Executar os Testes Unitários
 
 ```bash
-$ npm install
+npm run test
 ```
 
-## Compile and run the project
+### Executar os Testes E2E
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run test:e2e
 ```
 
-## Run tests
+## Dockerização
 
-```bash
-# unit tests
-$ npm run test
+### Requisitos
 
-# e2e tests
-$ npm run test:e2e
+- Docker e Docker Compose instalados
 
-# test coverage
-$ npm run test:cov
+### Como Executar com Docker
+
+1. **Build e execução:**
+
+   ```bash
+   docker-compose up --build
+   ```
+
+2. **Acesse a aplicação:**
+
+   - API: `http://localhost:3000`
+   - Documentação Swagger: `http://localhost:3000/api-docs`
+
+### Arquivos Docker
+
+**Dockerfile:**
+
+```dockerfile
+
+FROM node:18
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["npm", "run", "start"]
 ```
 
-## Deployment
+**docker-compose.yml:**
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g mau
-$ mau deploy
+```yaml
+version: '3.8'
+services:
+  backend:
+    build:
+      context: .
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: development
+    volumes:
+      - .:/app
+      - /app/node_modules
 ```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
