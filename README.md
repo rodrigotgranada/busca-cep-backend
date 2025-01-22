@@ -153,3 +153,14 @@ services:
       - .:/app
       - /app/node_modules
 ```
+
+## Usuário Mockado para teste
+
+- **Usuário**:
+ ```bash
+admin
+```
+- **Senha**: 
+```bash
+password123
+```
