@@ -122,13 +122,18 @@ npm run test:e2e
 
 ### Como Executar com Docker
 
-1. **Build e execução:**
+1. **Acessar root do projeto:**
+ ```bash
+    cd ${PATH}/busca-cep-backend
+   ```
+
+2. **Build e execução:**
 
    ```bash
    docker-compose up --build
    ```
 
-2. **Acesse a aplicação:**
+3. **Acesse a aplicação:**
 
    - API: `http://localhost:3000`
    - Documentação Swagger: `http://localhost:3000/api-docs`
