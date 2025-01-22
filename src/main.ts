@@ -6,8 +6,13 @@ import { MetricsService } from './metrics/metrics.service';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const metricsService = app.get(MetricsService);
+  app.enableCors({
+    origin: /http:\/\/localhost:\d+$/,
+    methods: 'GET,POST,PUT,DELETE',
+    allowedHeaders: 'Content-Type,Authorization',
+  });
 
+  const metricsService = app.get(MetricsService);
   app.use((req: any, res: any, next: () => void) => {
     res.on('finish', () => {
       metricsService.incrementHttpRequest(
@@ -16,7 +21,6 @@ async function bootstrap() {
         req.path,
       );
     });
-
     next();
   });
 

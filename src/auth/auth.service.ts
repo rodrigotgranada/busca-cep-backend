@@ -17,7 +17,9 @@ export class AuthService {
   login(username: string, password: string): string {
     this.logger.log(`Verificando credenciais do usuário: ${username}`);
     if (username === this.users.username && password === this.users.password) {
-      const token = jwt.sign({ username }, this.jwtSecret, { expiresIn: '1h' });
+      const token = jwt.sign({ username }, this.jwtSecret, {
+        expiresIn: '1h',
+      });
       this.logger.log(`Token gerado com sucesso para o usuário: ${username}`);
       return token;
     } else {

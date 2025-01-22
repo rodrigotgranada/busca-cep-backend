@@ -1,6 +1,4 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { CepModule } from './cep/cep.module';
 import { AuthModule } from './auth/auth.module';
 import { Logger } from './logging/logger.service';
@@ -12,8 +10,8 @@ import { MetricsMiddleware } from './metrics/metrics.middleware';
 
 @Module({
   imports: [CepModule, AuthModule, TerminusModule, HttpModule, MetricsModule],
-  controllers: [AppController, HealthController],
-  providers: [AppService, Logger],
+  controllers: [HealthController],
+  providers: [Logger],
   exports: [Logger],
 })
 export class AppModule implements NestModule {
