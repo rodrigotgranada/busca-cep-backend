@@ -10,6 +10,17 @@ Este é um backend desenvolvido em Node.js com o framework NestJS para fornecer 
 - **Docker**: Containerização da aplicação.
 - **Jest**: Para testes unitários e E2E.
 
+## Estratégia Utilizada, Arquitetura e Padrões
+A estratégia para a criaçãp da aplicação foi priorizar modularidade, clareza e confiabilidade. Conforme os requisitos do teste em questão, foi identificado como principal funcionalidade a consulta de CEP e a integração com um backend para comunicação com a API. Foi optado pelo uso do React para o desenvolvimento do frontend por sua flexibilidade e conhecimento prévio.
+
+A abordagem utilizada foi modular, segmentando a aplicação em componentes reutilizáveis, como o UserCard, o Offcanvas, o TextInput e o Header. Essa divisão não apenas facilitou a manutenção do código, mas também garantiu um fluxo de trabalho ágil e organizado. Também foram implementamos testes automatizados, abrangendo tanto testes unitários quanto end-to-end (E2E).
+
+A integração com o backend foi estruturada para ser eficiente e escalável. Centralizando as chamadas à API em um módulo próprio, o fetchWithAuth, promovendo clareza e evitando duplicação de código. Essa abordagem facilita futuras manutenções ou expansões.
+
+Para a estilização, foi utilizado o TailwindCSS, que proporcionou uma base consistente e acelerou o desenvolvimento das interfaces. No gerenciamento de estado, foi utilizado o useState e a Context API, garantindo uma arquitetura simples e eficiente. Junto com os princípios de Clean Code, foi utilizado nomes de variáveis e funções que fossem autoexplicativos, mantendo o código claro e de fácil leitura.
+
+Finalizando, foi configurado para que a aplicação possa rodar em um ambiente Docker. Foi criada uma imagem Docker que facilita a distribuição e o deploy da aplicação em diferentes ambientes, garantindo a consistência entre desenvolvimento, teste e produção. Toda essa estratégia resultou em uma aplicação bem estruturada, confiável e fácil de manter.
+
 ## Requisitos
 
 - Node.js (v18 ou superior)
@@ -164,3 +175,22 @@ admin
 ```bash
 password123
 ```
+
+## Processo HTTP (Client/Server)
+Quando um usuário digita uma URL no navegador, como http://www.netshoes.com.br, e pressiona enter, vários processos ocorrem para que a página seja exibida. Esse fluxo pode ser dividido em etapas:
+
+O navegador verifica se o endereço digitado é uma URL válida. Caso seja, ele inicia uma consulta dns para traduzir o nome de domínio www.netshoes.com.br em um endereço ip... Esse endereço ip é utilizado para localizar o servidor onde o site está hospedado. a busca pelo dns pode ser resolvida localmente (cache) ou através de servidores dns externos.
+
+agora com o endereçco ip,  o navegador inicia uma conexão com o servidor usando o protocolo http (https). Com uma conexão tcp com o servidor do endereço ip encontrado, geralmente na porta 80 para http ou 443 para https.
+
+com isso, o navegador envia uma requisição http ao servidor. Essa requisição contém informações como o método (GET, POST, PUT ...), o cabeçalho com vários detalhes, um deles,  o caminho do recurso solicitado (por exemplo, / para a página inicial).
+
+com todas essas informações, o servidor, ao receber essa requisição, processa o pedido. Em seguida, o servidor responde com um código de status http (200 OK para indicar sucesso) e os dados solicitados.
+
+com a responsta o navegador recebe a resposta e inicia o processo de renderização. Ele recebe as informções e faz novas requisições para carregar recursos adicionais, como css, scripts e imagens, utilizando urls encontradas no documento.
+
+Enquanto os recursos são baixados, o navegador constrói o DOM e aplica os estilos e comportamentos definidos nos arquivos de CSS e scripts. Finalmente, ele renderiza a página para o usuário.
+
+Para ilustar esse processo gerei um PlantUml (https://www.plantuml.com/plantuml/uml) onde sintetiza o processo como um todo:
+
+![Diagrama HTTP](https://raw.githubusercontent.com/rodrigotgranada/busca-cep-backend/main/PlantUml.png)
